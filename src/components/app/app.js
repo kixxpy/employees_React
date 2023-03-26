@@ -16,7 +16,9 @@ class App extends Component {
                 {name: 'John C.', salary: 800, increase: false, rise: true, id: 1},
                 {name: 'Alex M.', salary: 3000, increase: true, rise: false, id: 2},
                 {name: 'Carl W.', salary: 5000, increase: false, rise: false, id: 3}
-            ]
+            ],
+            tern: '',
+            filter: '',
         }
         this.maxId = 4;
     }
@@ -73,18 +75,51 @@ class App extends Component {
         });
     }
 
+    searchEmp = (items, tern) => {
+        if (tern.length === 0) {
+            return items;
+        }
+
+        return items.filter(item => {
+            return item.name.indexOf(tern) > -1;
+        });
+    }
+
+    onUpdateSearch = (tern) => {
+        this.setState({tern})
+    }
+
+    filterPost = (items, filter) => {
+        switch(filter) {
+            case 'rise':
+                return items.filter(item => item.rise);
+            case 'mereThen1000':
+                return items.filter(item => item.salary > 1000);
+            default:
+                return items;
+        }
+    }
+
     render() {
+        const {data, tern, filter} = this.state; 
+        const employees = this.state.data.length;
+        const increased = this.state.data.filter(item => item.increase).length;
+        const visibleData = this.filterPost(this.searchEmp(data, tern), filter);
+        
         return (
             <div className="app">
-                <AppInfo />
+                <AppInfo
+                    employees={employees}
+                    increased={increased}/>
     
                 <div className="search-panel">
-                    <SearchPanel/>
+                    <SearchPanel
+                        onUpdateSearch={this.onUpdateSearch}/>
                     <AppFilter/>
                 </div>
                 
                 <EmployeesList
-                    data={this.state.data}
+                    data={visibleData}
                     onDelete={this.deleteItem}
                     onToggleIncrease={this.onToggleIncrease}
                     onToggleRise={this.onToggleRise}/>
