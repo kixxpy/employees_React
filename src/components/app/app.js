@@ -18,7 +18,7 @@ class App extends Component {
                 {name: 'Carl W.', salary: 5000, increase: false, rise: false, id: 3}
             ],
             tern: '',
-            filter: '',
+            filter: 'all',
         }
         this.maxId = 4;
     }
@@ -31,7 +31,7 @@ class App extends Component {
         })
     }
 
-    // Да, пока могут добавляться пустые пользователи. Мы это еще исправим
+
     addItem = (name, salary) => {
         const newItem = {
             name, 
@@ -100,6 +100,10 @@ class App extends Component {
         }
     }
 
+    onFilterSelect = (filter) => {
+        this.setState({filter});
+    }
+
     render() {
         const {data, tern, filter} = this.state; 
         const employees = this.state.data.length;
@@ -115,7 +119,7 @@ class App extends Component {
                 <div className="search-panel">
                     <SearchPanel
                         onUpdateSearch={this.onUpdateSearch}/>
-                    <AppFilter/>
+                    <AppFilter filter={filter} onFilterSelect={this.onFilterSelect}/>
                 </div>
                 
                 <EmployeesList
